@@ -18,7 +18,7 @@ DATABASE_NAME = "database.db"
 UPLOAD_FOLDER = "static/uploads"
 POINT_TOLERANCE = 3
 SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
+SMTP_PORT = 465
 SMTP_EMAIL = "client3105.tech@gmail.com"
 SMTP_PASSWORD = "etbddqbqcdepwnli"
 ENCRYPTION_KEY = b"l9mIrLuz5g6rG9XiQ0C6v9cYSWQAnvEET97sUnN226Y="
@@ -255,15 +255,14 @@ def send_otp_email(receiver_email, otp):
     message["Subject"] = "Your Graphical Password OTP"
     message["From"] = SMTP_EMAIL
     message["To"] = receiver_email
-    message.set_content("Your OTP is " + otp)
+    message.set_content(f"Your OTP is: {otp}")
 
     try:
-        smtp = smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=10)
-        smtp.starttls()
-        smtp.login(SMTP_EMAIL, SMTP_PASSWORD)
-        smtp.send_message(message)
-        smtp.quit()
-        print("OTP email sent successfully")
+        with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT, timeout=15) as smtp:
+            smtp.login(SMTP_EMAIL, SMTP_PASSWORD)
+            smtp.send_message(message)
+
+        print("OTP sent successfully")
 
     except Exception as e:
         print("SMTP Error:", e)
