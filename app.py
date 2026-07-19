@@ -251,18 +251,23 @@ def smtp_is_ready():
 
 
 def send_otp_email(receiver_email, otp):
-    # This function sends the OTP through the SMTP server.
     message = EmailMessage()
     message["Subject"] = "Your Graphical Password OTP"
     message["From"] = SMTP_EMAIL
     message["To"] = receiver_email
     message.set_content("Your OTP is " + otp)
 
-    smtp = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-    smtp.starttls()
-    smtp.login(SMTP_EMAIL, SMTP_PASSWORD)
-    smtp.send_message(message)
-    smtp.quit()
+    try:
+        smtp = smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=10)
+        smtp.starttls()
+        smtp.login(SMTP_EMAIL, SMTP_PASSWORD)
+        smtp.send_message(message)
+        smtp.quit()
+        print("OTP email sent successfully")
+
+    except Exception as e:
+        print("SMTP Error:", e)
+        raise
 
 
 def send_alert_email(receiver_email, username):
