@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Password - Graphical Password Authentication</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="nav-logo">
+                <div class="logo-icon">GP</div>
+                <span>GraphicalAuth</span>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('home') }}#about">About</a></li>
+                    <li><a href="{{ url_for('home') }}#features">Features</a></li>
+                    <li><a href="{{ url_for('home') }}#how-it-works">How It Works</a></li>
+                    <li>
+                        <a href="{{ url_for('login') }}" class="button">Back to Login</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="auth-page-box">
+            <form class="panel" method="POST" data-mode="verify" data-point-count="{{ user['point_count'] }}" data-hide-points="yes" data-wait-seconds="{{ wait_seconds }}">
+                <div class="top-row">
+                    <a class="back-link" href="{{ url_for('login') }}">← Back</a>
+                    <h1>Verify Password</h1>
+                </div>
+
+                <div style="background-color: var(--color-brand-light); border-left: 4px solid var(--color-brand); padding: 12px 16px; border-radius: var(--radius-sm); margin-bottom: 24px;">
+                    <p style="font-weight: 600; font-size: 0.95rem; color: var(--color-brand);">Authenticating User</p>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Username: <strong>{{ user["username"] }}</strong></p>
+                </div>
+
+                {% if message %}
+                    <p class="message">{{ message }}</p>
+                {% endif %}
+
+                <!-- Locked Timer Alert -->
+                <div class="message wait-message" id="waitMessage" style="margin-bottom: 20px;">
+                    <i class="bi bi-lock-fill"></i> Security Lockout Active! Please wait <strong id="waitSeconds">{{ wait_seconds }}</strong> seconds before making another attempt.
+                </div>
+
+                <!-- Graphical password selector -->
+                <p class="intro" style="font-size: 0.95rem; margin-bottom: 12px;">
+                    Click the correct click points on your registered image below in the exact sequence you configured.
+                </p>
+
+                <div class="click-area-container">
+                    <div class="click-area">
+                        <img id="authImage" src="{{ url_for('static', filename=user['image_name']) }}" alt="Registered password visual grid">
+                        <div id="pointLayer"></div>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 14px;">
+                    <p class="hint" id="pointStatus" style="font-weight: 600; color: var(--color-accent); font-size: 0.95rem; margin: 0;"></p>
+                    <button class="button" type="button" id="resetPoints" style="height: 36px; padding: 0 14px; font-size: 0.85rem; border-color: var(--color-danger); color: var(--color-danger);">
+                        Clear Clicks
+                    </button>
+                </div>
+
+                <input type="hidden" name="points" id="pointsInput" required>
+
+                <div style="margin-top: 28px;">
+                    <button class="button primary full" type="submit" style="height: 48px; font-size: 1.05rem;">
+                        Verify Click Pattern
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="footer-container">
+            <p class="footer-text">&copy; 2026 Graphical Password Authentication System.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

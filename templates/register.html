@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Graphical Password Authentication</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="nav-logo">
+                <div class="logo-icon">GP</div>
+                <span>GraphicalAuth</span>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('home') }}#about">About</a></li>
+                    <li><a href="{{ url_for('home') }}#features">Features</a></li>
+                    <li><a href="{{ url_for('home') }}#how-it-works">How It Works</a></li>
+                    <li>
+                        <a href="{{ url_for('login') }}" class="button">Login</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="auth-page-box">
+            <form class="panel" method="POST" enctype="multipart/form-data" data-mode="register">
+                <div class="top-row">
+                    <a class="back-link" href="{{ url_for('home') }}">← Home</a>
+                    <h1>Register Account</h1>
+                </div>
+
+                <p class="intro" style="margin-bottom: 24px; font-size: 0.95rem;">
+                    Create a graphical password login. Complete the form and configure your click pattern below.
+                </p>
+
+                {% if message %}
+                    <p class="message">{{ message }}</p>
+                {% endif %}
+
+                <!-- Basic User Credentials -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label for="username">Choose Username</label>
+                        <input type="text" id="username" name="username" placeholder="e.g. johndoe12" required>
+                    </div>
+                    <div>
+                        <label for="email">Active Email (For OTP)</label>
+                        <input type="email" id="email" name="email" placeholder="e.g. john@example.com" required>
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;"></div>
+
+                <!-- Password Setup Guidance -->
+                <h3 style="margin-top: 20px; font-size: 1.15rem; font-weight: 600;">Set Graphical Password</h3>
+                <p class="intro" style="font-size: 0.9rem; margin-bottom: 16px;">
+                    Select an image and click 3 to 6 coordinates to form your authentication sequence. Remember the exact sequence.
+                </p>
+
+                <!-- Sample Image Selection -->
+                <label>Step 1: Choose or Upload Image</label>
+                <div class="image-choice">
+                    <label>
+                        <input type="radio" name="selected_image" value="city.png" checked>
+                        <img src="{{ url_for('static', filename='images/city.png') }}" alt="City landmark pattern">
+                        <div style="padding: 6px; font-size: 0.85rem; font-weight: 500; text-align: center; background: #f8fafc; border-top: 1px solid var(--border-color)">Modern City Skyline</div>
+                    </label>
+                    <label>
+                        <input type="radio" name="selected_image" value="garden.png">
+                        <img src="{{ url_for('static', filename='images/garden.png') }}" alt="Garden pathway pattern">
+                        <div style="padding: 6px; font-size: 0.85rem; font-weight: 500; text-align: center; background: #f8fafc; border-top: 1px solid var(--border-color)">Botanical Garden Path</div>
+                    </label>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label for="uploadedImage" style="margin-top: 10px;">Or upload a custom image:</label>
+                    <input type="file" name="uploaded_image" id="uploadedImage" accept="image/*">
+                </div>
+
+                <!-- Point Sequence Settings -->
+                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; align-items: end; margin-bottom: 16px;">
+                    <div>
+                        <label for="pointCount">Step 2: Number of Password Points</label>
+                        <select name="point_count" id="pointCount" required>
+                            <option value="3" selected>3 Points (Recommended)</option>
+                            <option value="4">4 Points</option>
+                            <option value="5">5 Points</option>
+                            <option value="6">6 Points</option>
+                        </select>
+                    </div>
+                    <div style="text-align: right; padding-bottom: 6px;">
+                        <button class="button" type="button" id="resetPoints" style="width: 100%; border-color: var(--color-danger); color: var(--color-danger);">
+                            ✕ Reset Pattern
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Graphic click area -->
+                <label>Step 3: Click points on the image in your desired order</label>
+                <div class="click-area-container">
+                    <div class="click-area">
+                        <img id="authImage" src="{{ url_for('static', filename='images/city.png') }}" alt="Selected password base image">
+                        <div id="pointLayer"></div>
+                    </div>
+                </div>
+                
+                <p class="hint" id="pointStatus" style="font-weight: 600; color: var(--color-brand); font-size: 0.95rem; margin-top: 12px;"></p>
+
+                <!-- Hidden values to send to Server -->
+                <input type="hidden" name="points" id="pointsInput" required>
+
+                <div style="margin-top: 32px;">
+                    <button class="button primary full" type="submit" style="height: 50px; font-size: 1.05rem;">
+                        Register & Send Email OTP
+                    </button>
+                </div>
+                
+                <p style="margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--text-secondary);">
+                    Already have an account? <a href="{{ url_for('login') }}" style="color: var(--color-brand); font-weight: 600; text-decoration: none;">Login here</a>
+                </p>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="footer-container">
+            <p class="footer-text">&copy; 2026 Graphical Password Authentication System.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

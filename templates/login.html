@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Graphical Password Authentication</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="nav-logo">
+                <div class="logo-icon">GP</div>
+                <span>GraphicalAuth</span>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('home') }}#about">About</a></li>
+                    <li><a href="{{ url_for('home') }}#features">Features</a></li>
+                    <li><a href="{{ url_for('home') }}#how-it-works">How It Works</a></li>
+                    <li>
+                        <a href="{{ url_for('register') }}" class="button primary">Register</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page narrow">
+        <form class="panel" method="POST">
+            <div class="top-row">
+                <a class="back-link" href="{{ url_for('home') }}">← Home</a>
+                <h1>Login</h1>
+            </div>
+
+            <p class="intro" style="margin-bottom: 20px; font-size: 0.95rem;">
+                Enter your registered username below to begin graphical coordinate verification.
+            </p>
+
+            {% if message %}
+                <p class="message">{{ message }}</p>
+            {% endif %}
+
+            <div style="margin-bottom: 24px;">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="e.g. JohnDoe" required autofocus>
+            </div>
+
+            <button class="button primary full" type="submit">Continue to Password</button>
+            
+            <p style="margin-top: 24px; text-align: center; font-size: 0.9rem; color: var(--text-secondary);">
+                Don't have an account? <a href="{{ url_for('register') }}" style="color: var(--color-brand); font-weight: 600; text-decoration: none;">Register here</a>
+            </p>
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="footer-container">
+            <p class="footer-text">&copy; 2026 Graphical Password Authentication System.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
